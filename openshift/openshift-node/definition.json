@@ -1,258 +1,258 @@
 {
-    "canPull": false, 
-    "canPush": false, 
-    "description": "A base node deployment with no cartridges.", 
+    "canPull": false,
+    "canPush": false,
+    "description": "A base node deployment with no cartridges.",
     "directories": [
         {
-            "group": "root", 
-            "mode": "755", 
-            "name": "ComodIT Logs", 
-            "owner": "root", 
+            "group": "root",
+            "mode": "755",
+            "name": "ComodIT Logs",
+            "owner": "root",
             "path": "/var/log/comodit/openshift-node/"
         }
-    ], 
-    "documentation": "", 
+    ],
+    "documentation": "",
     "files": [
         {
-            "group": "root", 
-            "mode": "644", 
-            "name": "web-proxy-config.json", 
-            "owner": "root", 
-            "path": "/etc/openshift/web-proxy-config.json", 
+            "group": "root",
+            "mode": "644",
+            "name": "web-proxy-config.json",
+            "owner": "root",
+            "path": "/etc/openshift/web-proxy-config.json",
             "template": {
                 "delimiter": {
-                    "end": "}", 
+                    "end": "}",
                     "start": "${"
-                }, 
+                },
                 "name": "web-proxy-config.json"
             }
-        }, 
+        },
         {
-            "group": "root", 
-            "mode": "644", 
-            "name": "node.conf", 
-            "owner": "root", 
-            "path": "/etc/openshift/node.conf", 
+            "group": "root",
+            "mode": "644",
+            "name": "node.conf",
+            "owner": "root",
+            "path": "/etc/openshift/node.conf",
             "template": {
                 "delimiter": {
-                    "end": "}", 
+                    "end": "}",
                     "start": "${"
-                }, 
+                },
                 "name": "node.conf"
             }
-        }, 
+        },
         {
-            "group": "root", 
-            "mode": "600", 
-            "name": "authorized_keys", 
-            "owner": "root", 
-            "path": "/root/.ssh/authorized_keys", 
+            "group": "root",
+            "mode": "600",
+            "name": "authorized_keys",
+            "owner": "root",
+            "path": "/root/.ssh/authorized_keys",
             "template": {
                 "delimiter": {
-                    "end": "}", 
+                    "end": "}",
                     "start": "${"
-                }, 
+                },
                 "name": "authorized_keys"
             }
-        }, 
+        },
         {
-            "group": "root", 
-            "mode": "755", 
-            "name": "install.sh", 
-            "owner": "root", 
-            "path": "/var/lib/comodit/applications/openshift-node/install.sh", 
+            "group": "root",
+            "mode": "755",
+            "name": "install.sh",
+            "owner": "root",
+            "path": "/var/lib/comodit/applications/openshift-node/install.sh",
             "template": {
                 "delimiter": {
-                    "end": "}", 
+                    "end": "}",
                     "start": "${"
-                }, 
+                },
                 "name": "install.sh"
             }
         }
-    ], 
-    "groups": [], 
+    ],
+    "groups": [],
     "handlers": [
         {
             "do": [
                 {
-                    "action": "execute", 
+                    "action": "execute",
                     "resource": "file://install.sh"
-                }, 
+                },
                 {
-                    "action": "restart", 
+                    "action": "restart",
                     "resource": "service://openshift-cgroups"
                 }
-            ], 
+            ],
             "on": [
                 "_install"
             ]
-        }, 
+        },
         {
             "do": [
                 {
-                    "action": "update", 
+                    "action": "update",
                     "resource": "file://node.conf"
                 }
-            ], 
+            ],
             "on": [
-                "broker_host", 
-                "public_hostname", 
-                "public_ip", 
+                "broker_host",
+                "public_hostname",
+                "public_ip",
                 "domain"
             ]
-        }, 
+        },
         {
             "do": [
                 {
-                    "action": "update", 
+                    "action": "update",
                     "resource": "file://authorized_keys"
                 }
-            ], 
+            ],
             "on": [
                 "keys"
             ]
-        }, 
+        },
         {
             "do": [
                 {
-                    "action": "update", 
+                    "action": "update",
                     "resource": "file://web-proxy-config.json"
-                }, 
+                },
                 {
-                    "action": "restart", 
+                    "action": "restart",
                     "resource": "service://openshift-node-web-proxy"
                 }
-            ], 
+            ],
             "on": [
-                "secure_port", 
+                "secure_port",
                 "unsercure_port"
             ]
         }
-    ], 
-    "name": "openshift-node", 
-    "organization": "Eschnou", 
+    ],
+    "name": "openshift-node",
+    "organization": "Eschnou",
     "packages": [
         {
             "name": "openshift-origin-node-proxy"
-        }, 
+        },
         {
             "name": "openshift-origin-msg-node-mcollective"
-        }, 
+        },
         {
             "name": "openshift-origin-node-util"
-        }, 
+        },
         {
             "name": "rubygem-openshift-origin-node"
         }
-    ], 
+    ],
     "parameters": [
         {
-            "description": "", 
-            "key": "broker_host", 
-            "name": "Broker Host", 
+            "description": "",
+            "key": "broker_host",
+            "name": "Broker Host",
             "schema": {
                 "type": "string"
-            }, 
-            "value": "localhost", 
+            },
+            "value": "localhost",
             "version": 1
-        }, 
+        },
         {
-            "description": "Port for non secure http proxying", 
-            "key": "unsercure_port", 
-            "name": "Unsecure Port", 
+            "description": "Port for non secure http proxying",
+            "key": "unsercure_port",
+            "name": "Unsecure Port",
             "schema": {
                 "type": "string"
-            }, 
-            "value": "8000", 
+            },
+            "value": "8000",
             "version": 1
-        }, 
+        },
         {
-            "description": "", 
-            "key": "domain", 
-            "name": "Cloud Domain", 
+            "description": "",
+            "key": "domain",
+            "name": "Cloud Domain",
             "schema": {
                 "type": "string"
-            }, 
-            "value": "example.com", 
+            },
+            "value": "example.com",
             "version": 1
-        }, 
+        },
         {
-            "description": "A list of authorized ssh keys.", 
-            "key": "keys", 
-            "name": "Authorized Keys", 
+            "description": "A list of authorized ssh keys.",
+            "key": "keys",
+            "name": "Authorized Keys",
             "schema": {
                 "items": {
                     "type": "string"
-                }, 
+                },
                 "type": "array"
-            }, 
-            "value": [], 
+            },
+            "value": [],
             "version": 1
-        }, 
+        },
         {
-            "description": "", 
-            "key": "public_ip", 
-            "name": "Node Public IP", 
+            "description": "",
+            "key": "public_ip",
+            "name": "Node Public IP",
             "schema": {
                 "type": "string"
-            }, 
-            "value": "127.0.0.1", 
+            },
+            "value": "127.0.0.1",
             "version": 1
-        }, 
+        },
         {
-            "description": "Port for secure http proxying", 
-            "key": "secure_port", 
-            "name": "Secure Port", 
+            "description": "Port for secure http proxying",
+            "key": "secure_port",
+            "name": "Secure Port",
             "schema": {
                 "type": "string"
-            }, 
-            "value": "8443", 
+            },
+            "value": "8443",
             "version": 1
-        }, 
+        },
         {
-            "description": "", 
-            "key": "public_hostname", 
-            "name": "Node Public Hostname", 
+            "description": "",
+            "key": "public_hostname",
+            "name": "Node Public Hostname",
             "schema": {
                 "type": "string"
-            }, 
-            "value": "please.set.node.public-hostname.fqdn", 
+            },
+            "value": "please.set.node.public-hostname.fqdn",
             "version": 1
         }
-    ], 
-    "price": "0.00", 
+    ],
+    "price": "0.00",
     "repositories": [
         {
-            "components": [], 
-            "location": "https://mirror.openshift.com/pub/openshift-origin/nightly/fedora-18/2013-02-25/x86_64/", 
+            "components": [],
+            "location": "https://mirror.openshift.com/pub/openshift-origin/nightly/fedora-18/packages/2013-02-25/x86_64/",
             "name": "openshift-origin-nightly"
-        }, 
+        },
         {
-            "components": [], 
-            "location": "https://mirror.openshift.com/pub/origin-server/fedora-18/x86_64/", 
+            "components": [],
+            "location": "https://mirror.openshift.com/pub/openshift-origin/nightly/fedora-18/dependencies/x86_64/",
             "name": "openshift-origin-deps"
         }
-    ], 
+    ],
     "services": [
         {
-            "enabled": true, 
+            "enabled": true,
             "name": "openshift-cgroups"
-        }, 
+        },
         {
-            "enabled": true, 
+            "enabled": true,
             "name": "openshift-node-web-proxy"
-        }, 
+        },
         {
-            "enabled": true, 
+            "enabled": true,
             "name": "cgred"
-        }, 
+        },
         {
-            "enabled": true, 
+            "enabled": true,
             "name": "openshift-gears"
         }
-    ], 
-    "url": "", 
-    "users": [], 
-    "uuid": "E724F130819E11E2995522A5AC1F0212", 
+    ],
+    "url": "",
+    "users": [],
+    "uuid": "E724F130819E11E2995522A5AC1F0212",
     "version": 14
 }
